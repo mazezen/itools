@@ -11,6 +11,20 @@ import (
 	"testing"
 )
 
+func TestGorm(t *testing.T) {
+	tests := map[string]struct {
+		test func(t *testing.T)
+	}{
+		"testPaginate":        {testPaginate},
+		"testFilterString":    {testFilterString},
+		"testInOrNotInFilter": {testInOrNotInFilter},
+	}
+	t.Parallel()
+	for name, tt := range tests {
+		t.Run(name, tt.test)
+	}
+}
+
 var Gdb *gorm.DB
 
 func Init() {
@@ -32,7 +46,7 @@ func Init() {
 }
 
 // 测试分页
-func TestPaginate(t *testing.T) {
+func testPaginate(t *testing.T) {
 	Init()
 	// 前端传递的参数
 	page := 1
@@ -51,7 +65,7 @@ func TestPaginate(t *testing.T) {
 }
 
 // 测试分页和带条件查询 "=", ">=", "<=", "<" , "like"
-func TestFilterString(t *testing.T) {
+func testFilterString(t *testing.T) {
 	Init()
 	// 前端传递的参数
 	page := 1
@@ -76,7 +90,7 @@ func TestFilterString(t *testing.T) {
 	}
 }
 
-func TestInOrNotInFilter(t *testing.T) {
+func testInOrNotInFilter(t *testing.T) {
 	Init()
 	// 前端传递的参数
 	page := 1

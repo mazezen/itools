@@ -6,7 +6,24 @@ import (
 	"testing"
 )
 
-func TestSend163Mail(t *testing.T) {
+func TestSendEmail(t *testing.T) {
+	tests := map[string]struct {
+		test func(t *testing.T)
+	}{
+		"Send163Mail":       {testSend163Mail},
+		"SendQQMail":        {testSendQQMail},
+		"Send126Mail":       {testSend126Mail},
+		"SendEmailStartTls": {testSendEmailStartTls},
+		"SendGmail":         {testSendGmail},
+	}
+
+	t.Parallel()
+	for name, tt := range tests {
+		t.Run(name, tt.test)
+	}
+}
+
+func testSend163Mail(t *testing.T) {
 	from := os.Getenv("Mail163From")
 	to := "" // 接收人的邮箱
 	mailPassword := os.Getenv("Mail163Pass")
@@ -21,7 +38,7 @@ func TestSend163Mail(t *testing.T) {
 	fmt.Println("邮件发送成功...")
 }
 
-func TestSendQQMail(t *testing.T) {
+func testSendQQMail(t *testing.T) {
 	from := os.Getenv("MailQQFrom")
 	to := "" // 接收人的邮箱
 	mailPassword := os.Getenv("MailQQPass")
@@ -68,7 +85,7 @@ func TestSendQQMail(t *testing.T) {
 	fmt.Println("邮件发送成功...")
 }
 
-func TestSend126Mail(t *testing.T) {
+func testSend126Mail(t *testing.T) {
 	from := os.Getenv("Mail126From")
 	to := "1752676696@qq.com" // 接收人的邮箱
 	mailPassword := os.Getenv("Mail126Pass")
@@ -115,7 +132,7 @@ func TestSend126Mail(t *testing.T) {
 	fmt.Println("邮件发送成功...")
 }
 
-func TestSendEmailStartTls(t *testing.T) {
+func testSendEmailStartTls(t *testing.T) {
 	from := os.Getenv("MailGmailFrom")
 	to := "" // 接收人的邮箱
 	mailPassword := os.Getenv("MailGmailPass")
@@ -162,7 +179,7 @@ func TestSendEmailStartTls(t *testing.T) {
 	fmt.Println("邮件发送成功...")
 }
 
-func TestSendGmail(t *testing.T) {
+func testSendGmail(t *testing.T) {
 	from := os.Getenv("MailGmailFrom")
 	to := []string{
 		"", // 接收人的邮箱1
