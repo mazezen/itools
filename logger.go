@@ -9,9 +9,61 @@ import (
 	"time"
 )
 
-func NewLogger(fileName string, maxSize int, maxAge int, localTime, compress bool) *zap.Logger {
+type LoggerOption struct {
+	FilePath  string
+	MaxSize   int
+	MaxAge    int
+	LocalTime bool
+	Compress  bool
+}
+
+type LoggerEngineOption func(*LoggerOption)
+
+func NewLogger(option ...LoggerEngineOption) *LoggerOption {
+	l := &LoggerOption{}
+	for _, o := range option {
+		o(l)
+	}
+	return l
+}
+
+func WithFilePath(path string) LoggerEngineOption {
+	return func(o *LoggerOption) {
+		o.FilePath = path
+	}
+}
+
+func WithMaxSize(size int) LoggerEngineOption {
+	return func(o *LoggerOption) {
+		o.MaxSize = size
+	}
+}
+
+func WithMaxAge(age int) LoggerEngineOption {
+	return func(o *LoggerOption) {
+		o.MaxAge = age
+	}
+}
+
+func WithLocalTime() LoggerEngineOption {
+	return func(o *LoggerOption) {
+		o.LocalTime = true
+	}
+}
+
+func WithCompress() LoggerEngineOption {
+	return func(o *LoggerOption) {
+		o.Compress = true
+	}
+}
+
+var (
+	AppLog *zap.Logger
+)
+
+func (l *LoggerOption) Start() {
 	encoder := zapEncoder()
-	writeSyncer := zapWriteSyncer(fileName, maxSize, maxAge, localTime, compress)
+	writeSyncer := zapWriteSyncer(l.FilePath, l.MaxSize, l.MaxAge, l.LocalTime, l.Compress)
 	core := zapcore.NewCore(encoder, writeSyncer, zapcore.DebugLevel)
 	consoleDebug := zapcore.Lock(os.Stdout)
 	consoleEncoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())
@@ -22,7 +74,7 @@ func NewLogger(fileName string, maxSize int, maxAge int, localTime, compress boo
 	Codes = append(Codes, core)
 	Codes = append(Codes, zapcore.NewCore(consoleEncoder, consoleDebug, p))
 	c := zapcore.NewTee(Codes...)
-	return zap.New(c, zap.AddCaller())
+	AppLog = zap.New(c, zap.AddCaller())
 }
 
 func zapEncoder() zapcore.Encoder {
@@ -47,4 +99,23 @@ func zapWriteSyncer(fileName string, maxSize int, maxAge int, localTime, compres
 
 	c.Start()
 	return zapcore.AddSync(logger)
+}
+
+var xLogger *ormLogger
+
+type ormLogger struct{}
+
+func (x *ormLogger) Write(p []byte) (n int, err error) {
+	AppLog.Info("数据库操作", zap.String("数据库", string(p)))
+	return len(p), nil
+}
+
+var EchoLog *EchoLogger
+
+type EchoLogger struct {
+}
+
+func (el *EchoLogger) Write(p []byte) (n int, err error) {
+	AppLog.Info("ECHO", zap.String("请求", string(p)))
+	return len(p), nil
 }
