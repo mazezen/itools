@@ -1,49 +1,147 @@
 package itools
 
 import (
-	"errors"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"log"
+	"os"
 	"time"
 	"xorm.io/xorm"
 )
 
-// NewXrm  初始化mysql连接
-func NewXrm(dsn string, showSql bool, args ...[]int) (*xorm.Engine, error) {
-	x, err := xorm.NewEngine("mysql", dsn)
-	if err != nil {
-		return nil, err
-	}
-	x.ShowSQL(showSql)
-	err = x.Ping()
-	if err != nil {
-		panic(err)
-	}
-	x.ShowSQL(showSql)
+const DBDriverDefault = "mysql"
 
-	if len(args) > 0 {
-		if len(args[0]) >= 3 {
-			return nil, errors.New("参数错误")
-		}
-		if len(args[0]) == 1 {
-			// 设置数据库连接池最大连接数
-			x.SetMaxOpenConns(args[0][0])
-		}
-		if len(args[0]) == 2 {
-			// 连接池最大允许的空闲连接数
-			x.SetMaxIdleConns(args[0][1])
-		}
-	} else {
-		// 设置数据库连接池最大连接数 100
-		x.SetMaxOpenConns(100)
-		// 连接池最大允许的空闲连接数 20
-		x.SetMaxIdleConns(20)
+type DbOption struct {
+	DbDriver    string `json:"db_driver"`
+	Host        string `json:"host"`
+	Port        string `json:"port"`
+	Username    string `json:"username"`
+	Password    string `json:"password"`
+	Database    string `json:"database"`
+	Charset     string `json:"charset"`
+	MaxIdleConn int    `json:"max_idle_conn"`
+	MaxOpenConn int    `json:"max_open_conn"`
+	ShowSql     bool   `json:"show_sql"`
+}
+
+type DbEngine struct {
+	DbOption
+}
+
+type EngineOption func(option *DbOption)
+
+func NewXrmEngine(options ...EngineOption) *DbEngine {
+	d := &DbOption{}
+	if d.DbDriver == "" {
+		d.DbDriver = DBDriverDefault
 	}
+	if d.MaxIdleConn == 0 {
+		d.MaxIdleConn = 10
+	}
+	if d.MaxOpenConn == 0 {
+		d.MaxOpenConn = 20
+	}
+	for _, option := range options {
+		option(d)
+	}
+	return &DbEngine{*d}
+}
+
+func WithDbDriver(driver string) EngineOption {
+	return func(o *DbOption) {
+		o.DbDriver = driver
+	}
+}
+
+func WithHost(host string) EngineOption {
+	return func(o *DbOption) {
+		o.Host = host
+	}
+}
+
+func WithPort(port string) EngineOption {
+	return func(o *DbOption) {
+		o.Port = port
+	}
+}
+
+func WithUsername(username string) EngineOption {
+	return func(o *DbOption) {
+		o.Username = username
+	}
+}
+
+func WithPassword(password string) EngineOption {
+	return func(o *DbOption) {
+		o.Password = password
+	}
+}
+
+func WithDatabase(database string) EngineOption {
+	return func(o *DbOption) {
+		o.Database = database
+	}
+}
+
+func WithCharset(charset string) EngineOption {
+	return func(o *DbOption) {
+		o.Charset = charset
+	}
+}
+
+func WithMaxIdleConn(maxIdleConn int) EngineOption {
+	return func(o *DbOption) {
+		o.MaxIdleConn = maxIdleConn
+	}
+}
+
+func WithMaxOpenConn(maxOpenConn int) EngineOption {
+	return func(o *DbOption) {
+		o.MaxOpenConn = maxOpenConn
+	}
+}
+
+func WithShowSql(showSql bool) EngineOption {
+	return func(o *DbOption) {
+		o.ShowSql = showSql
+	}
+}
+
+func (d *DbEngine) compact() string {
+	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s",
+		d.DbOption.Username,
+		d.DbOption.Password,
+		d.DbOption.Host,
+		d.DbOption.Port,
+		d.DbOption.Database,
+		d.DbOption.Charset)
+}
+
+func (d *DbEngine) Connect() {
+	engine, err := xorm.NewEngine(d.DbOption.DbDriver, d.compact())
+	if err != nil {
+		os.Exit(-1)
+	}
+	engine.SetMaxIdleConns(d.DbOption.MaxIdleConn)
+	engine.SetMaxOpenConns(d.DbOption.MaxOpenConn)
+	engine.ShowSQL(d.DbOption.ShowSql)
+
+	setDb(engine)
+}
+
+func (d *DbEngine) Close() {
+	d.Close()
+}
+
+var Db *xorm.Engine
+
+func setDb(_e *xorm.Engine) {
+	Db = _e
 	go func() {
-		for {
-			_ = x.Ping()
-			time.Sleep(1 * time.Hour)
+		err := Db.Ping()
+		if err != nil {
+			log.Fatalf("db connect ping err: %v", err)
 		}
+		time.Sleep(1 * time.Hour)
 	}()
-
-	return x, nil
 }
