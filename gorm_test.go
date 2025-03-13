@@ -11,12 +11,12 @@ import (
 	"testing"
 )
 
-var Db *gorm.DB
+var Gdb *gorm.DB
 
-func init() {
+func Init() {
 	var err error
 	dsn := "root:123456@tcp(127.0.0.1:3306)/jiaxiao?charset=utf8mb4&parseTime=True&loc=Local"
-	Db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+	Gdb, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: false,
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
@@ -33,6 +33,7 @@ func init() {
 
 // 测试分页
 func TestPaginate(t *testing.T) {
+	Init()
 	// 前端传递的参数
 	page := 1
 	pageSize := 10
@@ -43,7 +44,7 @@ func TestPaginate(t *testing.T) {
 	s["pageSize"] = 10
 
 	admins := make([]*models.Admin, 0)
-	Db.Scopes(Paginate(page, pageSize, s)).Find(&admins)
+	Gdb.Scopes(Paginate(page, pageSize, s)).Find(&admins)
 	for _, v := range admins {
 		fmt.Println(v)
 	}
@@ -51,6 +52,7 @@ func TestPaginate(t *testing.T) {
 
 // 测试分页和带条件查询 "=", ">=", "<=", "<" , "like"
 func TestFilterString(t *testing.T) {
+	Init()
 	// 前端传递的参数
 	page := 1
 	pageSize := 10
@@ -66,7 +68,7 @@ func TestFilterString(t *testing.T) {
 
 	// SELECT username = `test-demo-01` AND email = `111@aa.com` LIMIT = 10
 	// username 、 email为可选参数，非必填
-	Db.Scopes(Paginate(page, pageSize, s)).
+	Gdb.Scopes(Paginate(page, pageSize, s)).
 		Scopes(FilterString("username", username, "=")).
 		Scopes(FilterString("email", email, "=")).Find(&admins)
 	for _, v := range admins {
@@ -75,6 +77,7 @@ func TestFilterString(t *testing.T) {
 }
 
 func TestInOrNotInFilter(t *testing.T) {
+	Init()
 	// 前端传递的参数
 	page := 1
 	pageSize := 10
@@ -89,7 +92,7 @@ func TestInOrNotInFilter(t *testing.T) {
 
 	// SELECT * FROM `admin` WHERE `username` IN ('test-demo-01','test-demo-02') LIMIT 10
 	// username 非必填
-	Db.Scopes(Paginate(page, pageSize, s)).
+	Gdb.Scopes(Paginate(page, pageSize, s)).
 		Scopes(InOrNotInFilter("username", usernames, "in")).
 		Find(&admins)
 	for _, v := range admins {
@@ -99,7 +102,7 @@ func TestInOrNotInFilter(t *testing.T) {
 	fmt.Println("======================================================")
 
 	// SELECT * FROM `admin` WHERE `username` NOT IN ('test-demo-01','test-demo-02') LIMIT 10
-	Db.Scopes(Paginate(page, pageSize, s)).
+	Gdb.Scopes(Paginate(page, pageSize, s)).
 		Scopes(InOrNotInFilter("username", usernames, "not in")).
 		Find(&admins)
 	for _, v := range admins {

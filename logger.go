@@ -27,31 +27,31 @@ func NewLogger(option ...LoggerEngineOption) *LoggerOption {
 	return l
 }
 
-func WithFilePath(path string) LoggerEngineOption {
+func WithLoggerFilePath(path string) LoggerEngineOption {
 	return func(o *LoggerOption) {
 		o.FilePath = path
 	}
 }
 
-func WithMaxSize(size int) LoggerEngineOption {
+func WithLoggerMaxSize(size int) LoggerEngineOption {
 	return func(o *LoggerOption) {
 		o.MaxSize = size
 	}
 }
 
-func WithMaxAge(age int) LoggerEngineOption {
+func WithLoggerMaxAge(age int) LoggerEngineOption {
 	return func(o *LoggerOption) {
 		o.MaxAge = age
 	}
 }
 
-func WithLocalTime() LoggerEngineOption {
+func WithLoggerLocalTime() LoggerEngineOption {
 	return func(o *LoggerOption) {
 		o.LocalTime = true
 	}
 }
 
-func WithCompress() LoggerEngineOption {
+func WithLoggerCompress() LoggerEngineOption {
 	return func(o *LoggerOption) {
 		o.Compress = true
 	}

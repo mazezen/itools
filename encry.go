@@ -3,6 +3,7 @@ package itools
 import (
 	"crypto/md5"
 	"crypto/sha1"
+	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	"io"
@@ -30,4 +31,11 @@ func FileMd5(filepath string) (string, error) {
 	hash := md5.New()
 	_, _ = io.Copy(hash, file)
 	return hex.EncodeToString(hash.Sum(nil)), nil
+}
+
+func Sha256(str string) string {
+	hash := sha256.New()
+	hash.Write([]byte(str))
+	sum := hash.Sum(nil)
+	return hex.EncodeToString(sum)
 }

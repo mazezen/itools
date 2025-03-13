@@ -47,61 +47,61 @@ func NewXrmEngine(options ...EngineOption) *DbEngine {
 	return &DbEngine{*d}
 }
 
-func WithDbDriver(driver string) EngineOption {
+func WithXrmDbDriver(driver string) EngineOption {
 	return func(o *DbOption) {
 		o.DbDriver = driver
 	}
 }
 
-func WithHost(host string) EngineOption {
+func WithXrmHost(host string) EngineOption {
 	return func(o *DbOption) {
 		o.Host = host
 	}
 }
 
-func WithPort(port string) EngineOption {
+func WithXrmPort(port string) EngineOption {
 	return func(o *DbOption) {
 		o.Port = port
 	}
 }
 
-func WithUsername(username string) EngineOption {
+func WithXrmUsername(username string) EngineOption {
 	return func(o *DbOption) {
 		o.Username = username
 	}
 }
 
-func WithPassword(password string) EngineOption {
+func WithXrmPassword(password string) EngineOption {
 	return func(o *DbOption) {
 		o.Password = password
 	}
 }
 
-func WithDatabase(database string) EngineOption {
+func WithXrmDatabase(database string) EngineOption {
 	return func(o *DbOption) {
 		o.Database = database
 	}
 }
 
-func WithCharset(charset string) EngineOption {
+func WithXrmCharset(charset string) EngineOption {
 	return func(o *DbOption) {
 		o.Charset = charset
 	}
 }
 
-func WithMaxIdleConn(maxIdleConn int) EngineOption {
+func WithXrmMaxIdleConn(maxIdleConn int) EngineOption {
 	return func(o *DbOption) {
 		o.MaxIdleConn = maxIdleConn
 	}
 }
 
-func WithMaxOpenConn(maxOpenConn int) EngineOption {
+func WithXrmMaxOpenConn(maxOpenConn int) EngineOption {
 	return func(o *DbOption) {
 		o.MaxOpenConn = maxOpenConn
 	}
 }
 
-func WithShowSql(showSql bool) EngineOption {
+func WithXrmShowSql(showSql bool) EngineOption {
 	return func(o *DbOption) {
 		o.ShowSql = showSql
 	}

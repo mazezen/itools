@@ -14,7 +14,7 @@ type RedisOption struct {
 
 type RedisClientOption func(option *RedisOption)
 
-func RedisClient(option ...RedisClientOption) *RedisOption {
+func NewRedisClient(option ...RedisClientOption) *RedisOption {
 	r := &RedisOption{}
 	for _, o := range option {
 		o(r)
@@ -22,7 +22,7 @@ func RedisClient(option ...RedisClientOption) *RedisOption {
 	return r
 }
 
-func WithAddress(address string) RedisClientOption {
+func WithRedisAddress(address string) RedisClientOption {
 	return func(o *RedisOption) {
 		o.Addr = address
 	}

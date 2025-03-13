@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-var client *http.Client
+var httpClient *http.Client
 
 func init() {
 	def := http.DefaultTransport
@@ -20,7 +20,7 @@ func init() {
 	defPot.MaxIdleConns = 100
 	defPot.MaxIdleConnsPerHost = 100
 	defPot.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-	client = &http.Client{
+	httpClient = &http.Client{
 		Timeout:   time.Second * time.Duration(20),
 		Transport: defPot,
 	}
@@ -46,7 +46,7 @@ func Get(url string, header map[string]string, params map[string]interface{}) ([
 		req.URL.RawQuery = q.Encode()
 	}
 
-	r, err := client.Do(req)
+	r, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +73,7 @@ func Post(url string, header map[string]string, param map[string]interface{}) ([
 			req.Header.Add(k, v)
 		}
 	}
-	r, err := client.Do(req)
+	r, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +95,7 @@ func PostMultipart(url string, header map[string]string, payload *bytes.Buffer) 
 			req.Header.Add(k, v)
 		}
 	}
-	r, err := client.Do(req)
+	r, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
