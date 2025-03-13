@@ -3,8 +3,8 @@ package itools
 import (
 	"errors"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/go-xorm/xorm"
 	"time"
+	"xorm.io/xorm"
 )
 
 // NewXrm  初始化mysql连接
