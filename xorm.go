@@ -145,3 +145,29 @@ func setDb(_e *xorm.Engine) {
 		time.Sleep(1 * time.Hour)
 	}()
 }
+
+func Transaction(fs ...func(tx *xorm.Session) error) (err error) {
+	session := Db.NewSession()
+	if err = session.Begin(); err != nil {
+		return
+	}
+
+	for _, f := range fs {
+		if err = f(session); err != nil {
+			if err = session.Rollback(); err != nil {
+				return
+			}
+			if err = session.Close(); err != nil {
+				return
+			}
+			return
+		}
+		if err = session.Commit(); err != nil {
+			return
+		}
+		if err = session.Close(); err != nil {
+			return
+		}
+	}
+	return nil
+}
