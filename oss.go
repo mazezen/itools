@@ -107,7 +107,7 @@ func QiNiuUploadChunk(r *http.Request, store string) (string, string, error) {
 			endSize = fileLen
 		}
 		partContentBytes = fileContent[(i-1)*chunkSize2 : endSize]
-		partContentMd5 := Md5S(string(partContentBytes))
+		partContentMd5 := Md5encoder(string(partContentBytes))
 		uploadPartsRet := storage.UploadPartsRet{}
 		err = resumeUploaderV2.UploadParts(context.TODO(), upToken, upHost, bucket, key, true,
 			initPartsRet.UploadID, partNumber, partContentMd5, &uploadPartsRet, bytes.NewReader(partContentBytes),

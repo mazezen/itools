@@ -8,18 +8,28 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 )
 
-func Md5S(str string) string {
+func Md5encoder(code string) string {
 	w := md5.New()
-	_, _ = io.WriteString(w, str)
+	_, _ = io.WriteString(w, code)
 	md5Str := fmt.Sprintf("%x", w.Sum(nil))
 	return md5Str
 }
 
-func Sha1(str string) string {
+func Md5StrToUpper(code string) string {
+	return strings.ToUpper(Md5encoder(code))
+}
+
+// Md5SaltCode 加密加盐
+func Md5SaltCode(code, slat string) string {
+	return CompactStr(Md5encoder(code), slat)
+}
+
+func Sha1(code string) string {
 	o := sha1.New()
-	o.Write([]byte(str))
+	o.Write([]byte(code))
 	return hex.EncodeToString(o.Sum(nil))
 }
 
@@ -33,9 +43,9 @@ func FileMd5(filepath string) (string, error) {
 	return hex.EncodeToString(hash.Sum(nil)), nil
 }
 
-func Sha256(str string) string {
+func Sha256(code string) string {
 	hash := sha256.New()
-	hash.Write([]byte(str))
+	hash.Write([]byte(code))
 	sum := hash.Sum(nil)
 	return hex.EncodeToString(sum)
 }
