@@ -307,3 +307,21 @@ func (w *ToolsSlice) ExpandStringSlice(s []string, split string) []string {
 	}
 	return ret
 }
+
+func (w *ToolsSlice) PaginateArray(arr []interface{}, page, pageSize int) []interface{} {
+	if page < 1 {
+		page = 1
+	}
+	if pageSize < 10 {
+		pageSize = 10
+	}
+
+	from := (page - 1) * pageSize
+	to := from + pageSize
+
+	if to > len(arr) {
+		to = len(arr)
+	}
+
+	return arr[from:to]
+}
