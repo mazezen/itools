@@ -326,7 +326,7 @@ func (w *ToolsSlice) PaginateArray(arr []interface{}, page, pageSize int) []inte
 	return arr[from:to]
 }
 
-// repeat item in slice. No contain self item.
+// repeat item in slice. No contain self item
 func (w *ToolsSlice) Count(arr []interface{}) int {
 n := 0
 	h := 0
