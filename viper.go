@@ -1,7 +1,6 @@
 package itools
 
 import (
-	"fmt"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 )
@@ -19,10 +18,4 @@ func LoadConfig(cf string) {
 	viper.OnConfigChange(func(in fsnotify.Event) {
 		Gm.M = viper.AllSettings()
 	})
-}
-
-func PrintConfigMap(config map[string]interface{}) {
-	for key, value := range config {
-		fmt.Printf("%s: %v\n", key, value)
-	}
 }
