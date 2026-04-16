@@ -21,10 +21,11 @@ type LoggerOption struct {
 	aLog *zap.Logger
 }
 
+var Logger *LoggerOption
+
 type LoggerEngineOption func(*LoggerOption)
 
-
-func NewLogger(option ...LoggerEngineOption) *LoggerOption {
+func NewLogger(option ...LoggerEngineOption) {
 	l := &LoggerOption{
 		filePath: "app.log", // 默认日志文件
 		maxSize: 1024, // 默认大小 1 G
@@ -39,7 +40,7 @@ func NewLogger(option ...LoggerEngineOption) *LoggerOption {
 	}
 
 	l.start()
-	return l
+	Logger = l
 }
 
 func  WithLoggerFilePath(path string) LoggerEngineOption {

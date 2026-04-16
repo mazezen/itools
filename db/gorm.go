@@ -1,21 +1,18 @@
-package itools
+package db
 
 import (
-	"errors"
+	"reflect"
+	"time"
+
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/spf13/cast"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
-	"reflect"
-	"time"
 )
 
-// NewGorm gorm 初始化mysql连接
-// eg: root:123456@tcp(127.0.0.1:3306)/demo?charset=utf8mb4&parseTime=True&loc=Local
-func NewGorm(dsn string, args ...[]int) (*gorm.DB, error) {
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+func (d *DbOption) connectGorm() {
+	db, err := gorm.Open(mysql.Open(d.dsn), &gorm.Config{
 		SkipDefaultTransaction: false,
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true, // 禁用表名加s
@@ -25,28 +22,12 @@ func NewGorm(dsn string, args ...[]int) (*gorm.DB, error) {
 		DisableForeignKeyConstraintWhenMigrating: true, // 禁用创建外键约束
 	})
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
 	sqlDB, _ := db.DB()
-	if len(args) > 0 {
-		if len(args[0]) >= 3 {
-			return nil, errors.New("参数错误")
-		}
-		if len(args[0]) == 1 {
-			// 设置数据库连接池最大连接数
-			sqlDB.SetMaxOpenConns(args[0][0])
-		}
-		if len(args[0]) == 2 {
-			// 连接池最大允许的空闲连接数
-			sqlDB.SetMaxIdleConns(args[0][1])
-		}
-	} else {
-		// 设置数据库连接池最大连接数 100
-		sqlDB.SetMaxOpenConns(100)
-		// 连接池最大允许的空闲连接数 20
-		sqlDB.SetMaxIdleConns(20)
-	}
+	sqlDB.SetMaxIdleConns(d.maxIdleConn)
+	sqlDB.SetMaxOpenConns(d.maxOpenConn)
 
 	go func() {
 		for {
@@ -55,32 +36,18 @@ func NewGorm(dsn string, args ...[]int) (*gorm.DB, error) {
 		}
 	}()
 
-	return db, nil
+	GDB = db
 }
 
-// Paginate page, pageSize 传入参数
-// s 分页默认配置
-func Paginate(page interface{}, pageSize interface{}, s map[string]interface{}) func(db *gorm.DB) *gorm.DB {
+// Paginate
+func Paginate(page int, pageSize int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		p := cast.ToInt(page)
-		size := cast.ToInt(pageSize)
-		if page == 0 {
-			if s["page"] != nil {
-				page = s["page"].(int)
-			} else {
-				page = 1
-			}
+		if page <= 0 || pageSize <= 0 {
+			page = 1
+			pageSize = 10
 		}
-
-		if pageSize == 0 {
-			if s["pageSize"] != nil {
-				pageSize = s["pageSize"].(int)
-			} else {
-				pageSize = 10
-			}
-		}
-		offset := (p - 1) * size
-		return db.Offset(offset).Limit(size)
+		offset := (page - 1) * pageSize
+		return db.Offset(offset).Limit(pageSize)
 	}
 }
 

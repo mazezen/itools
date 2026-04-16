@@ -6,16 +6,6 @@ import (
 	"go.uber.org/zap"
 )
 
-var tLog *LoggerOption
-
-func init() {
-	tLog = NewLogger(
-		WithLoggerFilePath("./app.log"),
-		WithLoggerConsole(false),
-		WithLoggerFormatter("json"),
-	)
-}
-
 func TestLogger(t *testing.T) {
 	tt := map[string]struct{
 		test func(t *testing.T)
@@ -29,6 +19,11 @@ func TestLogger(t *testing.T) {
 
 	t.Parallel()
 	for name, v := range tt {
+		NewLogger(
+			WithLoggerFilePath("./app.log"),
+			WithLoggerConsole(false),
+			WithLoggerFormatter("json"),
+		)
 		t.Run(name, v.test)
 	}
 }
@@ -46,7 +41,7 @@ func testDebug(t *testing.T) {
 		{ Name: "go", Url: "go.dev" },
 	}
 
-	tLog.Debug("test debug ...", zap.Any("user", u))
+	Logger.Debug("test debug ...", zap.Any("user", u))
 }
 
 func testInfo(t *testing.T) {
@@ -62,7 +57,7 @@ func testInfo(t *testing.T) {
 		{ Name: "go", Url: "go.dev" },
 	}
 
-	tLog.Info("test info ...", zap.Any("user", u))
+	Logger.Info("test info ...", zap.Any("user", u))
 }
 
 func testWarn(t *testing.T) {
@@ -79,7 +74,7 @@ func testWarn(t *testing.T) {
 	}
 
 
-	tLog.Warn("test Warn ...", zap.Any("user", u))
+	Logger.Warn("test Warn ...", zap.Any("user", u))
 }
 
 func testError(t *testing.T) {
@@ -96,7 +91,7 @@ func testError(t *testing.T) {
 	}
 
 
-	tLog.Error("test Error ...", zap.Any("user", u))
+	Logger.Error("test Error ...", zap.Any("user", u))
 }
 
 func testDPanic(t *testing.T) {
@@ -113,7 +108,7 @@ func testDPanic(t *testing.T) {
 	}
 
 
-	tLog.DPanic("test DBpanic ...", zap.Any("user", u))
+	Logger.DPanic("test DBpanic ...", zap.Any("user", u))
 }
 
 func TestPanic(t *testing.T) {
@@ -136,30 +131,30 @@ func TestPanic(t *testing.T) {
 		}
 	}()
 
-	tLog.Panic("test panic ...", zap.Any("user", u))
+	Logger.Panic("test panic ...", zap.Any("user", u))
 }
 
 func TestSugar(t *testing.T) {
 	type User struct {Name string; Url string}
 	u := []struct{Name string; Url string}{{ Name: "go", Url: "go.dev" }}
 
-	tLog.SugarDebug("test sugar ..")
-	tLog.SugarDebugf("test sugar u = %v", u)
-	tLog.SugarDebugw("test sugar u", "user", u)
+	Logger.SugarDebug("test sugar ..")
+	Logger.SugarDebugf("test sugar u = %v", u)
+	Logger.SugarDebugw("test sugar u", "user", u)
 
-	tLog.SugarInfo("test sugar ..")
-	tLog.SugarInfof("test sugar u = %v", u)
-	tLog.SugarInfow("test sugar u", "user", u)
+	Logger.SugarInfo("test sugar ..")
+	Logger.SugarInfof("test sugar u = %v", u)
+	Logger.SugarInfow("test sugar u", "user", u)
 
-	tLog.SugarWarn("test sugar ..")
-	tLog.SugarWarnf("test sugar u = %v", u)
-	tLog.SugarWarnw("test sugar u", "user", u)
+	Logger.SugarWarn("test sugar ..")
+	Logger.SugarWarnf("test sugar u = %v", u)
+	Logger.SugarWarnw("test sugar u", "user", u)
 
-	tLog.SugarError("test sugar ..")
-	tLog.SugarErrorf("test sugar u = %v", u)
-	tLog.SugarErrorw("test sugar u", "user", u)
+	Logger.SugarError("test sugar ..")
+	Logger.SugarErrorf("test sugar u = %v", u)
+	Logger.SugarErrorw("test sugar u", "user", u)
 
-	tLog.SugarDPanic("test sugar ..")
-	tLog.SugarDPanicf("test sugar u = %v", u)
-	tLog.SugarDPanicw("test sugar u", "user", u)
+	Logger.SugarDPanic("test sugar ..")
+	Logger.SugarDPanicf("test sugar u = %v", u)
+	Logger.SugarDPanicw("test sugar u", "user", u)
 }
