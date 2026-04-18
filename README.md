@@ -19,8 +19,6 @@ go get github.com/mazezen/itools
 | ilo                 | https://github.com/samber/lo            | ✅  |
 | TCP消息粘包         | iio package                             | ✅  |
 | 邮件发送            | 163邮箱、QQ邮箱、126邮箱、Gmail邮箱     | ✅  |
-| 加密                | md5、sh1、文件md5、aes                  | ✅  |
-| jwt                 |                                         | ✅  |
 | redis               |                                         | ✅  |
 | oss                 | 七牛云文                                | ✅  |
 | mongodb             | 单个写入、批量写入、修改、统计、删除    | ✅  |
@@ -42,3 +40,4 @@ go get github.com/mazezen/itools
 ### 推荐包
 
 1. Http Request: https://github.com/go-resty/resty
+2. JWT: https://github.com/golang-jwt/jwt

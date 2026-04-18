@@ -3,20 +3,23 @@ package itools
 import (
 	"bytes"
 	"context"
+	"crypto/md5"
 	"fmt"
-	"github.com/qiniu/go-sdk/v7/auth/qbox"
-	"github.com/qiniu/go-sdk/v7/storage"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
+
+	"github.com/qiniu/go-sdk/v7/auth/qbox"
+	"github.com/qiniu/go-sdk/v7/storage"
 )
 
 // QiNiuFileUpload 上传文件到七牛云
 func QiNiuFileUpload(r *http.Request, store string) (string, error) {
-	var ak = os.Getenv("QiNiuAK")
-	var sk = os.Getenv("QiNiuSk")
-	var bucket = os.Getenv("QiNiuBucket")
-	var url = os.Getenv("QiuNiuUrl")
+	ak := os.Getenv("QiNiuAK")
+	sk := os.Getenv("QiNiuSk")
+	bucket := os.Getenv("QiNiuBucket")
+	url := os.Getenv("QiuNiuUrl")
 
 	file, fileHeader, err := r.FormFile("file")
 	if err != nil {
@@ -49,10 +52,10 @@ func QiNiuFileUpload(r *http.Request, store string) (string, error) {
 
 // QiNiuUploadChunk 七牛云分片上传
 func QiNiuUploadChunk(r *http.Request, store string) (string, string, error) {
-	var ak = os.Getenv("QiNiuAK")
-	var sk = os.Getenv("QiNiuSk")
-	var bucket = os.Getenv("QiNiuBucket")
-	var url = os.Getenv("QiuNiuUrl")
+	ak := os.Getenv("QiNiuAK")
+	sk := os.Getenv("QiNiuSk")
+	bucket := os.Getenv("QiNiuBucket")
+	url := os.Getenv("QiuNiuUrl")
 
 	putPolicy := storage.PutPolicy{
 		Scope: bucket,
@@ -107,7 +110,9 @@ func QiNiuUploadChunk(r *http.Request, store string) (string, string, error) {
 			endSize = fileLen
 		}
 		partContentBytes = fileContent[(i-1)*chunkSize2 : endSize]
-		partContentMd5 := Md5encoder(string(partContentBytes))
+		w := md5.New()
+		_, _ = io.WriteString(w, string(partContentBytes))
+		partContentMd5 := fmt.Sprintf("%x", w.Sum(nil))
 		uploadPartsRet := storage.UploadPartsRet{}
 		err = resumeUploaderV2.UploadParts(context.TODO(), upToken, upHost, bucket, key, true,
 			initPartsRet.UploadID, partNumber, partContentMd5, &uploadPartsRet, bytes.NewReader(partContentBytes),
@@ -138,10 +143,10 @@ func QiNiuUploadChunk(r *http.Request, store string) (string, string, error) {
 // QiNiuResumeUploadFile
 // 七牛云文件断点续传
 func QiNiuResumeUploadFile(r *http.Request, store string) (string, error) {
-	var ak = os.Getenv("QiNiuAK")
-	var sk = os.Getenv("QiNiuSk")
-	var bucket = os.Getenv("QiNiuBucket")
-	var url = os.Getenv("QiuNiuUrl")
+	ak := os.Getenv("QiNiuAK")
+	sk := os.Getenv("QiNiuSk")
+	bucket := os.Getenv("QiNiuBucket")
+	url := os.Getenv("QiuNiuUrl")
 
 	file, fileHeader, err := r.FormFile("file")
 	if err != nil {
