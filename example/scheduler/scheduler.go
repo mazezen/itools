@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mazezen/itools"
+	"github.com/mazezen/itools/ischeduler"
 )
 
 func main() {
 	// 创建调度器
-	scheduler := itools.NewScheduler()
+	scheduler := ischeduler.NewScheduler()
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 

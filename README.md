@@ -1,43 +1,9 @@
-### <p align="center">itools</p>
+### itools
 
-#### <p align="center">工具包</p>
-
-#### <p align="center"><a href="https://github.com/mazezen/itools/releases"><img src="https://img.shields.io/github/release/itools/releases.svg" alt="GitHub release"></a><a href="https://github.com/mazezen/itools/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg" alt="license"></a><p>
+> common usage tools
 
 ### 安装
 
 ```shell
 go get github.com/mazezen/itools
 ```
-
-### 包元素
-
-| 功能                | 使用的包                                |     |
-| ------------------- | --------------------------------------- | --- |
-| 日志                | https://github.com/uber-go/zap          | ✅  |
-| db                  | https://xorm.io/ , https://gorm.io/gorm | ✅  |
-| ilo                 | https://github.com/samber/lo            | ✅  |
-| TCP消息粘包         | iio package                             | ✅  |
-| 邮件发送            | 163邮箱、QQ邮箱、126邮箱、Gmail邮箱     | ✅  |
-| redis               |                                         | ✅  |
-| oss                 | 七牛云文                                | ✅  |
-| mongodb             | 单个写入、批量写入、修改、统计、删除    | ✅  |
-| etcd                | 写入、读取、修改、删除                  | ✅  |
-| 敏感词过滤          |                                         | ✅  |
-| 参数校验            |                                         | ✅  |
-| 限流                | 计数器、漏桶算法、令牌桶算法            | ✅  |
-| 基于内存的缓存系统  |                                         | ✅  |
-| 定时监听器          |                                         | ✅  |
-| api统一返回格式     |                                         | ✅  |
-| 常见正则校验        |                                         | ✅  |
-| 使用Lua操作redis    |                                         | ✅  |
-| 解决TCP粘包拆包问题 |                                         | ✅  |
-| leveldb             |                                         | ✅  |
-| viper               |                                         | ✅  |
-| load_polling        | 随机、轮询、一致性HASH、权重            | ✅  |
-| scheduler           | 定时调度器,只执行一次                   | ✅  |
-
-### 推荐包
-
-1. Http Request: https://github.com/go-resty/resty
-2. JWT: https://github.com/golang-jwt/jwt

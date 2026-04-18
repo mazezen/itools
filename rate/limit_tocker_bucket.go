@@ -1,4 +1,4 @@
-package itools
+package rate
 
 import (
 	"sync"
@@ -6,10 +6,10 @@ import (
 )
 
 type TokenBucket struct {
-	rate         int64 //固定的token放入速率, r/s
-	capacity     int64 //桶的容量
-	tokens       int64 //桶中当前token数量
-	lastTokenSec int64 //桶上次放token的时间戳 s
+	rate         int64 // 固定的token放入速率, r/s
+	capacity     int64 // 桶的容量
+	tokens       int64 // 桶中当前token数量
+	lastTokenSec int64 // 桶上次放token的时间戳 s
 
 	lock sync.Mutex
 }

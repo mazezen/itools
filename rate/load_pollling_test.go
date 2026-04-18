@@ -1,22 +1,20 @@
-package itools
+package rate
 
 import (
 	"fmt"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestRandomPollingNext(t *testing.T) {
 	rp := &RandomPolling{}
 	err := rp.Add("127.0.0.1:2003", "127.0.0.1:2004")
-	assert.NotErrorIs(t, err, ParamsNoEnoughError)
+	t.Fatal(err)
 	n := rp.RandomNext()
 	t.Logf("random polling: %#v", n)
 
 	rap := &RotationPolling{}
 	err = rap.Add("127.0.0.1:2003", "127.0.0.1:2004")
-	assert.NotErrorIs(t, err, ParamsNoEnoughError)
+	t.Fatal(err)
 	rotationNext1 := rap.RotationNext()
 	rotationNext2 := rap.RotationNext()
 	t.Logf("rotation polling: %#v", rotationNext1)

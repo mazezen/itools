@@ -1,4 +1,4 @@
-package itools
+package rate
 
 import (
 	"math"

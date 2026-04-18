@@ -1,4 +1,4 @@
-package memerycache
+package icache
 
 import (
 	"fmt"

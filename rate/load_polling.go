@@ -1,4 +1,4 @@
-package itools
+package rate
 
 import (
 	"errors"
@@ -9,9 +9,7 @@ import (
 	"sync"
 )
 
-var (
-	ParamsNoEnoughError = errors.New("at least one parameter is required")
-)
+var ParamsNoEnoughError = errors.New("at least one parameter is required")
 
 type RandomPolling struct {
 	currentIndex int
@@ -52,7 +50,7 @@ func (p *RotationPolling) RotationNext() interface{} {
 		return ""
 	}
 
-	var length = len(p.rss)
+	length := len(p.rss)
 	if p.currentIndex >= length {
 		p.currentIndex = 0
 	}
@@ -62,8 +60,10 @@ func (p *RotationPolling) RotationNext() interface{} {
 	return current
 }
 
-type Hash func(data []byte) uint32
-type Uint32Slice []uint32
+type (
+	Hash        func(data []byte) uint32
+	Uint32Slice []uint32
+)
 
 func (p Uint32Slice) Len() int           { return len(p) }
 func (p Uint32Slice) Less(i, j int) bool { return p[i] < p[j] }
