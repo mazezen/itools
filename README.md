@@ -16,16 +16,16 @@ go get github.com/mazezen/itools
 | ------------------- | --------------------------------------- | --- |
 | 日志                | https://github.com/uber-go/zap          | ✅  |
 | db                  | https://xorm.io/ , https://gorm.io/gorm | ✅  |
+| ilo                 | https://github.com/samber/lo            | ✅  |
+| TCP消息粘包         | iio package                             | ✅  |
 | 邮件发送            | 163邮箱、QQ邮箱、126邮箱、Gmail邮箱     | ✅  |
 | 加密                | md5、sh1、文件md5、aes                  | ✅  |
 | jwt                 |                                         | ✅  |
-| map                 |                                         | ✅  |
 | redis               |                                         | ✅  |
 | oss                 | 七牛云文                                | ✅  |
 | mongodb             | 单个写入、批量写入、修改、统计、删除    | ✅  |
 | etcd                | 写入、读取、修改、删除                  | ✅  |
 | 敏感词过滤          |                                         | ✅  |
-| 切片                |                                         | ✅  |
 | 参数校验            |                                         | ✅  |
 | 限流                | 计数器、漏桶算法、令牌桶算法            | ✅  |
 | 基于内存的缓存系统  |                                         | ✅  |

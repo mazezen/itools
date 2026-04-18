@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/mazezen/itools"
 	"net"
+
+	"github.com/mazezen/itools/iio"
 )
 
 func main() {
@@ -12,6 +13,7 @@ func main() {
 		fmt.Printf("Listen tcp client err: %v", err)
 		return
 	}
+	fmt.Println("Listen tcp client successfull ...")
 
 	for {
 		conn, err := listener.Accept()
@@ -26,8 +28,9 @@ func main() {
 
 func read(conn net.Conn) {
 	defer conn.Close()
+	itcp := iio.NewITcp("")
 	for {
-		content, err := itools.Decode(conn)
+		content, err := tcpIo.Decode(conn)
 		if err != nil {
 			fmt.Printf("Read from conn err: %v", err)
 			break
