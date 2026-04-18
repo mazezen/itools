@@ -31,7 +31,6 @@ go get github.com/mazezen/itools
 | 基于内存的缓存系统  |                                         | ✅  |
 | 定时监听器          |                                         | ✅  |
 | api统一返回格式     |                                         | ✅  |
-| http请求            | POST、GET                               | ✅  |
 | 常见正则校验        |                                         | ✅  |
 | 使用Lua操作redis    |                                         | ✅  |
 | 解决TCP粘包拆包问题 |                                         | ✅  |
@@ -39,3 +38,7 @@ go get github.com/mazezen/itools
 | viper               |                                         | ✅  |
 | load_polling        | 随机、轮询、一致性HASH、权重            | ✅  |
 | scheduler           | 定时调度器,只执行一次                   | ✅  |
+
+### 推荐包
+
+1. 发送HTTP请求: https://github.com/go-resty/resty
