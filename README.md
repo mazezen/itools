@@ -41,4 +41,4 @@ go get github.com/mazezen/itools
 
 ### 推荐包
 
-1. 发送HTTP请求: https://github.com/go-resty/resty
+1. Http Request: https://github.com/go-resty/resty
